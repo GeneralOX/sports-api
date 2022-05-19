@@ -3,7 +3,7 @@ import { ForbiddenException, Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import * as argon from "argon2";
 
-import { SignUpDto, SingInDto } from "./dto";
+import { CreateUser_FL_Dto, SignUpDto, SingInDto } from "./dto";
 import { JwtService } from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
 
@@ -55,6 +55,22 @@ export class AuthService {
         return this.signToken(user.id, user.email);
     }
 
+    async createUserFromLink(dto: CreateUser_FL_Dto) {
+        const hash = await argon.hash(dto.password);
+        const user = await this.prisma.user.update({
+            where: { id: dto.id },
+            data: {
+                age: dto.age,
+                password: hash,
+                phone: dto.phone,
+                position: dto.position,
+            }
+        })
+        if (!user) throw new ForbiddenException("Connot create new user!");
+        return { message: "register ok!" };
+    }
+
+    
     async signToken(useid: number, email: string): Promise<{ access_token: string }> {
         const payload = {
             sub: useid,
