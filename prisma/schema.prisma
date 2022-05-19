@@ -1,0 +1,92 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id       Int    @id @default(autoincrement())
+  email    String
+  password String
+}
+
+model Entreprise {
+  id       Int    @id @default(autoincrement())
+  name     String
+  teamId   Int?
+  email    String @unique
+  password String
+}
+
+model Team {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  players User[]
+  Ranking Ranking[]
+  A_Match Match[]   @relation(name: "A_Match")
+  R_Match Match[]   @relation(name: "R_Match")
+}
+
+model User {
+  id       Int     @id @default(autoincrement())
+  teamId   Int     @unique
+  name     String
+  email    String  @unique
+  password String?
+  phone    String?
+  role     Int?
+  age      String?
+  position String?
+  isLeader Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  team Team @relation(fields: [teamId], references: [id])
+}
+
+model Field {
+  id    Int     @id @default(autoincrement())
+  name  String
+  Match Match[]
+}
+
+model League {
+  id        Int      @id @default(autoincrement())
+  startTime DateTime
+  endTime   DateTime
+
+  createdAt DateTime  @default(now())
+  Ranking   Ranking[]
+  Match     Match[]
+}
+
+model Ranking {
+  id       Int @id @default(autoincrement())
+  teamId   Int
+  leagueId Int
+  Rank     Int
+
+  league League @relation(fields: [leagueId], references: [id])
+  team   Team   @relation(fields: [teamId], references: [id])
+}
+
+model Match {
+  id       Int    @id @default(autoincrement())
+  leagueId Int
+  team1Id  Int
+  team2Id  Int
+  score    String
+  fieldId  Int
+
+  startAt DateTime
+
+  team1  Team   @relation(fields: [team1Id], references: [id], name: "A_Match")
+  team2  Team   @relation(fields: [team2Id], references: [id], name: "R_Match")
+  league League @relation(fields: [leagueId], references: [id])
+  field  Field  @relation(fields: [fieldId], references: [id])
+}
