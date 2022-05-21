@@ -25,7 +25,7 @@ export class AuthService {
                 name: user.name,
                 role: 0,
                 team: user.teamId,
-                access_token: this.signToken(user.id, user.email)
+                access_token: await this.signToken(user.id, user.email)
             };
         }
         catch (error) {
@@ -50,7 +50,7 @@ export class AuthService {
             name: user.name,
             role: 0,
             team: user.teamId,
-            access_token: this.signToken(user.id, user.email)
+            access_token: await this.signToken(user.id, user.email)
         };
     }
 
@@ -87,7 +87,7 @@ export class AuthService {
             name: user.name,
             role: 2,
             isLeader: user.isLeader,
-            access_token: this.signToken(user.id, user.email)
+            access_token: await this.signToken(user.id, user.email)
         };;
     }
 
