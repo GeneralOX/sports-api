@@ -14,14 +14,19 @@ export class AuthService {
     async EntrepriseSignUp(dto: SignUpDto) {
         const hash = await argon.hash(dto.password);
         try {
-            const entrp = await this.prisma.entreprise.create({
+            const user = await this.prisma.entreprise.create({
                 data: {
                     email: dto.email,
                     name: dto.name,
                     password: hash
                 }
             });
-            return this.signToken(entrp.id, entrp.email);
+            return {
+                name: user.name,
+                role: 0,
+                team: user.teamId,
+                access_token: this.signToken(user.id, user.email)
+            };
         }
         catch (error) {
             if (error instanceof PrismaClientKnownRequestError) {
@@ -40,7 +45,13 @@ export class AuthService {
         if (!user) throw new ForbiddenException("Incorrect Email!");
         const pwMatches = await argon.verify(user.password, dto.password);
         if (!pwMatches) throw new ForbiddenException("Incorrect Password!");
-        return this.signToken(user.id, user.email);
+
+        return {
+            name: user.name,
+            role: 0,
+            team: user.teamId,
+            access_token: this.signToken(user.id, user.email)
+        };
     }
 
     async PlayerSignIn(dto: SingInDto) {
@@ -52,7 +63,12 @@ export class AuthService {
         if (!user) throw new ForbiddenException("Incorrect Email!");
         const pwMatches = await argon.verify(user.password, dto.password);
         if (!pwMatches) throw new ForbiddenException("Incorrect Password!");
-        return this.signToken(user.id, user.email);
+        return {
+            name: user.name,
+            role: 2,
+            isLeader: user.isLeader,
+            access_token: await this.signToken(user.id, user.email)
+        };
     }
 
     async createUserFromLink(dto: CreateUser_FL_Dto) {
@@ -67,19 +83,21 @@ export class AuthService {
             }
         })
         if (!user) throw new ForbiddenException("Connot create new user!");
-        return { message: "register ok!" };
+        return {
+            name: user.name,
+            role: 2,
+            isLeader: user.isLeader,
+            access_token: this.signToken(user.id, user.email)
+        };;
     }
 
-    
-    async signToken(useid: number, email: string): Promise<{ access_token: string }> {
+    async signToken(useid: number, email: string): Promise<string> {
         const payload = {
             sub: useid,
             email
         }
 
         const token = await this.jwt.signAsync(payload, { expiresIn: '120m', secret: this.config.get('JWT_SECRET') });
-        return {
-            access_token: token
-        }
+        return token;
     }
 }

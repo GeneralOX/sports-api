@@ -5,16 +5,18 @@ import { UpdateMatchDto } from './dto/update-match.dto';
 
 @Controller('match')
 export class MatchController {
-  constructor(private readonly matchService: MatchService) {}
+  constructor(private readonly matchService: MatchService) { }
 
-  @Post()
-  create(@Body() createMatchDto: CreateMatchDto) {
-    return this.matchService.create(createMatchDto);
-  }
 
   @Get()
   findAll() {
     return this.matchService.findAll();
+  }
+
+  // LATER
+  @Post()
+  create(@Body() createMatchDto: CreateMatchDto) {
+    return this.matchService.create(createMatchDto);
   }
 
   @Get(':id')

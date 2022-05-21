@@ -5,13 +5,7 @@ import { UpdateLeagueDto } from './dto/update-league.dto';
 
 @Controller('league')
 export class LeagueController {
-  constructor(private readonly leagueService: LeagueService) {}
-
-  @Post()
-  create(@Body() createLeagueDto: CreateLeagueDto) {
-    return this.leagueService.create(createLeagueDto);
-  }
-
+  constructor(private readonly leagueService: LeagueService) { }
   @Get()
   findAll() {
     return this.leagueService.findAll();
@@ -20,6 +14,13 @@ export class LeagueController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.leagueService.findOne(+id);
+  }
+
+  // LATER
+
+  @Post()
+  create(@Body() createLeagueDto: CreateLeagueDto) {
+    return this.leagueService.create(createLeagueDto);
   }
 
   @Patch(':id')
