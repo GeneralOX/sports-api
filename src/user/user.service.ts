@@ -8,15 +8,21 @@ export class UserService {
     constructor(private prisma: PrismaService) { }
 
     async createUserFromTeam(dto: CreateUser_FT_Dto) {
+        console.log(dto)
         const user = this.prisma.user.create({
             data: {
                 name: dto.name,
                 email: dto.email,
-                teamId: dto.teamId,
+                /* role: dto.role == "player" ? 1 : 2 */
+                team: { connect: { id: dto.teamId } }
             }
+        }).catch((r) => {
+            console.log(r)
+        }).finally(() => {
+            console.log("[+] DONE");
         })
         if (!user) throw new ForbiddenException("Error while adding new player!");
-        return { message: "New player added!" };
+        return { message: "New player added!", user };
     }
 
     async changeTeamLeader(dto: changeTL_Dto) {

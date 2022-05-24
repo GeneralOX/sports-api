@@ -7,21 +7,21 @@ import { UpdateMatchDto } from './dto/update-match.dto';
 export class MatchController {
   constructor(private readonly matchService: MatchService) { }
 
-
   @Get()
   findAll() {
     return this.matchService.findAll();
   }
 
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.matchService.findOne(+id);
+  }
+
+
   // LATER
   @Post()
   create(@Body() createMatchDto: CreateMatchDto) {
     return this.matchService.create(createMatchDto);
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.matchService.findOne(+id);
   }
 
   @Patch(':id')

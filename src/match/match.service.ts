@@ -18,13 +18,13 @@ export class MatchService {
     return matches;
   }
 
-  findOne(id: number) {
-    const match = this.prisma.match.findUnique({
+  async findOne(id: number) {
+    const match = await this.prisma.match.findUnique({
       where: { id: id },
       select: {
         startAt: true, id: true, score: true,
-        team1: { select: { name: true, players: { select: { id: true, name: true, position: true } } } },
-        team2: { select: { name: true, players: { select: { id: true, name: true, position: true } } } },
+        team1: { select: { name: true, id: true } },
+        team2: { select: { name: true, id: true } },
         league: true, field: true
       }
     })
@@ -40,7 +40,10 @@ export class MatchService {
     return `This action updates a #${id} match`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} match`;
+  async remove(id: number) {
+    await this.prisma.match.delete({
+      where: { id: id }
+    })
+    return { message: `This action removes a #${id} match` };
   }
 }

@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateLeagueDto } from './dto/create-league.dto';
-import { UpdateLeagueDto } from './dto/update-league.dto';
+import { UpdateLeagueDto, CreateLeagueDto, JoinLeagueDto } from './dto';
 
 @Injectable()
 export class LeagueService {
@@ -41,19 +40,42 @@ export class LeagueService {
     });
     return { league, teams };
   }
-  // LATER
-  create(createLeagueDto: CreateLeagueDto) {
-    return 'This action adds a new league';
+
+  async joinLeague(dto: JoinLeagueDto) {
+    await this.prisma.league_teams.create({
+      data: {
+        leagueId: dto.leagueId,
+        teamId: dto.teamId,
+        status: 0
+      }
+    });
+    return { message: "You have been join the league!" }
   }
 
-
-
-
-  update(id: number, updateLeagueDto: UpdateLeagueDto) {
-    return `This action updates a #${id} league`;
+  async confirmJoin(id: number) {
+    await this.prisma.league_teams.update({
+      where: { id: id },
+      data: { status: 1 }
+    });
+    return { message: "You have been added team to league" };
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} league`;
+  async create(dto: CreateLeagueDto) {
+    await this.prisma.league.create({
+      data: {
+        name: dto.name,
+        startTime: dto.startTime,
+        endTime: dto.endTime,
+      }
+    });
+    return { message: "New League have been added" };
   }
+
+  async remove(id: number) {
+    await this.prisma.league.delete({
+      where: { id: id }
+    })
+    return { message: "League have been removed" };
+  }
+
 }

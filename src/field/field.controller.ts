@@ -1,11 +1,10 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { FieldService } from './field.service';
-import { CreateFieldDto } from './dto/create-field.dto';
-import { UpdateFieldDto } from './dto/update-field.dto';
+import { CreateFieldDto } from './dto';
 
 @Controller('field')
 export class FieldController {
-  constructor(private readonly fieldService: FieldService) {}
+  constructor(private readonly fieldService: FieldService) { }
 
   @Post()
   create(@Body() createFieldDto: CreateFieldDto) {
@@ -20,11 +19,6 @@ export class FieldController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.fieldService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateFieldDto: UpdateFieldDto) {
-    return this.fieldService.update(+id, updateFieldDto);
   }
 
   @Delete(':id')

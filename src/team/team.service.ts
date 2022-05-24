@@ -6,13 +6,17 @@ import { CreateTeamDto, UpdateTeamDto } from './dto';
 export class TeamService {
   constructor(private prisma: PrismaService) { }
 
-  async create(dto: CreateTeamDto) {
-    await this.prisma.team.create({
+  async create(userid: number, dto: CreateTeamDto) {
+    const team = await this.prisma.team.create({
       data: {
         name: dto.name
       }
     });
-    return { message: "new team added" };
+    await this.prisma.entreprise.update({
+      where: { id: userid },
+      data: { teamId: team.id }
+    })
+    return { message: "new team added #", teamId: team.id };
   }
 
   async findOne(id: number) {

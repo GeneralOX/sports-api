@@ -1,26 +1,35 @@
 import { Injectable } from '@nestjs/common';
-import { CreateFieldDto } from './dto/create-field.dto';
-import { UpdateFieldDto } from './dto/update-field.dto';
-
+import { PrismaService } from 'src/prisma/prisma.service';
+import { CreateFieldDto } from './dto';
 @Injectable()
 export class FieldService {
-  create(createFieldDto: CreateFieldDto) {
-    return 'This action adds a new field';
+  constructor(private prisma: PrismaService) { }
+
+  async create(dto: CreateFieldDto) {
+    await this.prisma.field.create({
+      data: { name: dto.name }
+    });
+    return { message: 'This action adds a new field' };
   }
 
-  findAll() {
-    return `This action returns all field`;
+  async findAll() {
+    const fileds = this.prisma.field.findMany();
+    return { fileds };
   }
 
-  findOne(id: number) {
+  async findOne(id: number) {
+    const field = await this.prisma.field.findUnique({
+      where: { id: id },
+      include: { Match: true }
+    })
     return `This action returns a #${id} field`;
   }
 
-  update(id: number, updateFieldDto: UpdateFieldDto) {
-    return `This action updates a #${id} field`;
-  }
+  async remove(id: number) {
+    await this.prisma.field.delete({
+      where: { id: id }
+    });
 
-  remove(id: number) {
-    return `This action removes a #${id} field`;
+    return { message: `This action removes a #${id} field` };
   }
 }

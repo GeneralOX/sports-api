@@ -26,15 +26,16 @@ model Team {
   id   Int    @id @default(autoincrement())
   name String
 
-  players User[]
-  Ranking Ranking[]
-  A_Match Match[]   @relation(name: "A_Match")
-  R_Match Match[]   @relation(name: "R_Match")
+  players      User[]
+  Ranking      Ranking[]
+  A_Match      Match[]        @relation(name: "A_Match")
+  R_Match      Match[]        @relation(name: "R_Match")
+  League_Teams League_Teams[]
 }
 
 model User {
   id       Int     @id @default(autoincrement())
-  teamId   Int     @unique
+  teamId   Int
   name     String
   email    String  @unique
   password String?
@@ -62,9 +63,20 @@ model League {
   startTime DateTime
   endTime   DateTime
 
-  createdAt DateTime  @default(now())
-  Ranking   Ranking[]
-  Match     Match[]
+  createdAt    DateTime       @default(now())
+  Ranking      Ranking[]
+  Match        Match[]
+  League_Teams League_Teams[]
+}
+
+model League_Teams {
+  id       Int @id @default(autoincrement())
+  leagueId Int
+  teamId   Int
+  status   Int @default(0)
+
+  team   Team   @relation(fields: [teamId], references: [id])
+  league League @relation(fields: [leagueId], references: [id])
 }
 
 model Ranking {
