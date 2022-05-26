@@ -1,26 +1,34 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { RankingService } from './ranking.service';
-import { CreateRankingDto } from './dto/create-ranking.dto';
-import { UpdateRankingDto } from './dto/update-ranking.dto';
+import { CreateRankingDto, UpdateRankingDto } from './dto';
 
 @Controller('ranking')
 export class RankingController {
-  constructor(private readonly rankingService: RankingService) {}
+  constructor(private readonly rankingService: RankingService) { }
 
-  @Post()
-  create(@Body() createRankingDto: CreateRankingDto) {
-    return this.rankingService.create(createRankingDto);
+  @Post("join")
+  create(@Body() dto: CreateRankingDto) {
+    return this.rankingService.create(dto);
   }
-
+  @Post("confirm")
+  confirm(@Body("rankId") id: any) {
+    return this.rankingService.confirmJoin(id);
+  }
+  @Get('league/:id')
+  getLeagueRank(@Param('id') id: number) {
+    return this.rankingService.getLeagueRank(+id);
+  }
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.rankingService.findOne(+id);
+  }
+  // LATER
   @Get()
   findAll() {
     return this.rankingService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.rankingService.findOne(+id);
-  }
+
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateRankingDto: UpdateRankingDto) {

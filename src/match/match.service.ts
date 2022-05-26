@@ -31,6 +31,13 @@ export class MatchService {
     return match;
   }
 
+  async remove(id: number) {
+    await this.prisma.match.delete({
+      where: { id: id }
+    })
+    return { message: `This action removes a #${id} match` };
+  }
+
   // LATER
   create(createMatchDto: CreateMatchDto) {
     return 'This action adds a new match';
@@ -38,12 +45,5 @@ export class MatchService {
 
   update(id: number, updateMatchDto: UpdateMatchDto) {
     return `This action updates a #${id} match`;
-  }
-
-  async remove(id: number) {
-    await this.prisma.match.delete({
-      where: { id: id }
-    })
-    return { message: `This action removes a #${id} match` };
   }
 }

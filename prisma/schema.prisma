@@ -30,7 +30,6 @@ model Team {
   Ranking      Ranking[]
   A_Match      Match[]        @relation(name: "A_Match")
   R_Match      Match[]        @relation(name: "R_Match")
-  League_Teams League_Teams[]
 }
 
 model User {
@@ -66,17 +65,6 @@ model League {
   createdAt    DateTime       @default(now())
   Ranking      Ranking[]
   Match        Match[]
-  League_Teams League_Teams[]
-}
-
-model League_Teams {
-  id       Int @id @default(autoincrement())
-  leagueId Int
-  teamId   Int
-  status   Int @default(0)
-
-  team   Team   @relation(fields: [teamId], references: [id])
-  league League @relation(fields: [leagueId], references: [id])
 }
 
 model Ranking {
@@ -84,6 +72,7 @@ model Ranking {
   teamId   Int
   leagueId Int
   Rank     Int
+  status   Int @default(0)
 
   league League @relation(fields: [leagueId], references: [id])
   team   Team   @relation(fields: [teamId], references: [id])

@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { LeagueService } from './league.service';
-import { CreateLeagueDto, JoinLeagueDto, UpdateLeagueDto } from './dto';
+import { CreateLeagueDto } from './dto';
 
 @Controller('league')
 export class LeagueController {
@@ -14,11 +14,6 @@ export class LeagueController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.leagueService.findOne(+id);
-  }
-
-  @Post('join')
-  joinLeague(@Body() dto: JoinLeagueDto) {
-    return this.leagueService.joinLeague(dto);
   }
 
   @Post()

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { UpdateLeagueDto, CreateLeagueDto, JoinLeagueDto } from './dto';
+import { CreateLeagueDto } from './dto';
 
 @Injectable()
 export class LeagueService {
@@ -39,25 +39,6 @@ export class LeagueService {
       }
     });
     return { league, teams };
-  }
-
-  async joinLeague(dto: JoinLeagueDto) {
-    await this.prisma.league_teams.create({
-      data: {
-        leagueId: dto.leagueId,
-        teamId: dto.teamId,
-        status: 0
-      }
-    });
-    return { message: "You have been join the league!" }
-  }
-
-  async confirmJoin(id: number) {
-    await this.prisma.league_teams.update({
-      where: { id: id },
-      data: { status: 1 }
-    });
-    return { message: "You have been added team to league" };
   }
 
   async create(dto: CreateLeagueDto) {

@@ -1,14 +1,5 @@
 import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 
-export class JoinLeagueDto {
-    @IsNumber()
-    @IsNotEmpty()
-    leagueId: string;
-
-    @IsNumber()
-    @IsNotEmpty()
-    teamId: string;
-}
 export class CreateLeagueDto {
 
     @IsString()
