@@ -26,10 +26,10 @@ model Team {
   id   Int    @id @default(autoincrement())
   name String
 
-  players      User[]
-  Ranking      Ranking[]
-  A_Match      Match[]        @relation(name: "A_Match")
-  R_Match      Match[]        @relation(name: "R_Match")
+  players User[]
+  Ranking Ranking[]
+  A_Match Match[]   @relation(name: "A_Match")
+  R_Match Match[]   @relation(name: "R_Match")
 }
 
 model User {
@@ -47,7 +47,7 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  team Team @relation(fields: [teamId], references: [id])
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
 }
 
 model Field {
@@ -62,9 +62,9 @@ model League {
   startTime DateTime
   endTime   DateTime
 
-  createdAt    DateTime       @default(now())
-  Ranking      Ranking[]
-  Match        Match[]
+  createdAt DateTime  @default(now())
+  Ranking   Ranking[]
+  Match     Match[]
 }
 
 model Ranking {
@@ -74,8 +74,8 @@ model Ranking {
   Rank     Int
   status   Int @default(0)
 
-  league League @relation(fields: [leagueId], references: [id])
-  team   Team   @relation(fields: [teamId], references: [id])
+  league League @relation(fields: [leagueId], references: [id], onDelete: Cascade)
+  team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
 }
 
 model Match {
@@ -88,8 +88,8 @@ model Match {
 
   startAt DateTime
 
-  team1  Team   @relation(fields: [team1Id], references: [id], name: "A_Match")
-  team2  Team   @relation(fields: [team2Id], references: [id], name: "R_Match")
-  league League @relation(fields: [leagueId], references: [id])
-  field  Field  @relation(fields: [fieldId], references: [id])
+  team1  Team   @relation(fields: [team1Id], references: [id], name: "A_Match", onDelete: Cascade)
+  team2  Team   @relation(fields: [team2Id], references: [id], name: "R_Match", onDelete: Cascade)
+  league League @relation(fields: [leagueId], references: [id], onDelete: Cascade)
+  field  Field  @relation(fields: [fieldId], references: [id], onDelete: Cascade)
 }

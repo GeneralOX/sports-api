@@ -11,7 +11,7 @@ export class MatchService {
     const matches = this.prisma.match.findMany({
       where: {},
       select: {
-        startAt: true, id: true,
+        startAt: true, id: true,score: true,
         team1: true, team2: true, league: true, field: true
       }
     })

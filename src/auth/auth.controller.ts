@@ -24,5 +24,4 @@ export class AuthController {
     createUserFromLink(@Body() dto: CreateUser_FL_Dto) {
         return this.authService.createUserFromLink(dto);
     }
-
 }

@@ -31,6 +31,18 @@ export class TeamService {
     return team;
   }
 
+  async remove(id: number) {
+    await this.prisma.team.delete({
+      where: { id: Number(id) }
+    })
+    await this.prisma.entreprise.updateMany({
+      where: { teamId: Number(id) },
+      data: { teamId: null }
+    })
+    return { message: "team have been removed!" };
+  }
+
+  // LATER
   findAll() {
     return [];
   }
@@ -40,7 +52,5 @@ export class TeamService {
     return `This action updates a #${id} team`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} team`;
-  }
+
 }

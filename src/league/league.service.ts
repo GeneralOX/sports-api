@@ -24,13 +24,14 @@ export class LeagueService {
       include: { Match: true },
     });
     var teamsId = [];
-    league.Match.forEach(
-      (e) => {
-        if (!teamsId.includes(e.team1Id))
-          teamsId.push(e.team1Id)
-        if (!teamsId.includes(e.team2Id))
-          teamsId.push(e.team2Id)
-      });
+    if (league != null)
+      league.Match.forEach(
+        (e) => {
+          if (!teamsId.includes(e.team1Id))
+            teamsId.push(e.team1Id)
+          if (!teamsId.includes(e.team2Id))
+            teamsId.push(e.team2Id)
+        });
     var teams = await this.prisma.team.findMany({
       where: {
         id: {
@@ -59,4 +60,14 @@ export class LeagueService {
     return { message: "League have been removed" };
   }
 
+  async getLeagueMatches(id: number) {
+    const matches = await this.prisma.match.findMany({
+      where: { leagueId: Number(id) },
+      select: {
+        startAt: true, id: true, score: true,
+        team1: true, team2: true, league: true, field: true
+      }
+    })
+    return matches;
+  }
 }

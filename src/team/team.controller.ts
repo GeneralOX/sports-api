@@ -15,23 +15,27 @@ export class TeamController {
     return this.teamService.create(user.id, createTeamDto);
   }
 
-  @Get()
-  findAll() {
-    return this.teamService.findAll();
-  }
-
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.teamService.findOne(+id);
   }
 
+  @Delete(':id')
+  remove(@Param('id') id: number) {
+    return this.teamService.remove(+id);
+  }
+
+
+  // LATER
+  @Get()
+  findAll() {
+    return this.teamService.findAll();
+  }
+  
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateTeamDto: UpdateTeamDto) {
     return this.teamService.update(+id, updateTeamDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.teamService.remove(+id);
-  }
+
 }

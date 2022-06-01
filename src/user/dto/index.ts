@@ -23,7 +23,7 @@ export class changeTL_Dto {
 
     @IsNumber()
     @IsNotEmpty()
-    userid: number;
+    userId: number;
 
 }
 
@@ -34,5 +34,25 @@ export class RestPss_Dto {
 
     @IsString()
     @IsNotEmpty()
+    password: string;
+}
+
+/******* */
+
+export class UpdateEntre_Dto {
+    @IsString()
+    @IsNotEmpty()
+    name: string;
+
+    @IsString()
+    password: string;
+}
+
+export class UpdateUser_Dto {
+    @IsString()
+    @IsNotEmpty()
+    name: string;
+
+    @IsString()
     password: string;
 }

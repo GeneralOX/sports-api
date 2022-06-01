@@ -15,7 +15,10 @@ export class LeagueController {
   findOne(@Param('id') id: string) {
     return this.leagueService.findOne(+id);
   }
-
+  @Get('matches/:id')
+  getLeagueMatches(@Param('id') id: number) {
+    return this.leagueService.getLeagueMatches(id);
+  }
   @Post()
   create(@Body() createLeagueDto: CreateLeagueDto) {
     return this.leagueService.create(createLeagueDto);

@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { changeTL_Dto, CreateUser_FT_Dto, RestPss_Dto } from './dto';
+import { changeTL_Dto, CreateUser_FT_Dto, RestPss_Dto, UpdateEntre_Dto } from './dto';
 import * as argon from "argon2";
 
 @Injectable()
@@ -33,7 +33,7 @@ export class UserService {
         });
 
         await this.prisma.user.update({
-            where: { id: dto.userid },
+            where: { id: dto.userId },
             data: { isLeader: 1 }
         })
         return { message: "team leader have been changed!" };
@@ -46,6 +46,43 @@ export class UserService {
             data: { password: hash }
         })
         return { message: "password changed!" };
+    }
+
+    async deleteUser(id: number) {
+        await this.prisma.user.delete({
+            where: { id: Number(id) }
+        });
+        return { message: "user have been delete!" };
+    }
+
+
+    async upadateEntreData(userId: number, dto: UpdateEntre_Dto) {
+
+        let data: any = {};
+        data.name = dto.name;
+        if (dto.password != "") {
+            data.password = await argon.hash(dto.password);
+        }
+
+        const user = await this.prisma.entreprise.update({
+            where: {
+                id: userId
+            },
+            data: data
+        })
+        return {
+            name: user.name,
+            role: 0,
+            team: user.teamId
+        };
+    }
+    async getEntreData(id: number) {
+        const user = await this.prisma.entreprise.findFirst({
+            where: { id: id }
+        })
+        delete user.password;
+        delete user.teamId;
+        return user;
     }
 
 
