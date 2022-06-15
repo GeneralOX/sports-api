@@ -12,12 +12,17 @@ export class CreateMatchDto {
     @IsNumber()
     @IsNotEmpty()
     team2Id: number;
-    
+
     @IsNumber()
     @IsNotEmpty()
     fieldId: number;
-    
+
     @IsString()
     @IsNotEmpty()
-    startAt: string;
+    startDate: string;
+
+    @IsString()
+    @IsNotEmpty()
+    startTime: string;
 }
+export class UpdateMatchDto { }

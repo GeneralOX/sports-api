@@ -6,15 +6,15 @@ export class FieldService {
   constructor(private prisma: PrismaService) { }
 
   async create(dto: CreateFieldDto) {
-    await this.prisma.field.create({
+    const r = await this.prisma.field.create({
       data: { name: dto.name }
     });
-    return { message: 'This action adds a new field' };
+    return r;
   }
 
   async findAll() {
     const fileds = this.prisma.field.findMany();
-    return { fileds };
+    return fileds;
   }
 
   async findOne(id: number) {
@@ -27,9 +27,18 @@ export class FieldService {
 
   async remove(id: number) {
     await this.prisma.field.delete({
-      where: { id: id }
+      where: { id: Number(id) }
     });
-
     return { message: `This action removes a #${id} field` };
+  }
+
+  async findAvailable(date: string) {
+    const fieldList = await this.prisma.field.findMany();
+    const matchInDay = await this.prisma.match.findMany({
+      where: {
+        startDate: date
+      }
+    })
+    return { fieldList, matchInDay }
   }
 }

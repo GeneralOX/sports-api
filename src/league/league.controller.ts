@@ -10,7 +10,10 @@ export class LeagueController {
   findAll() {
     return this.leagueService.findAll();
   }
-
+  @Get("allData/:id")
+  getLeagueData(@Param('id') id: number) {
+    return this.leagueService.getLeagueData(id);
+  }
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.leagueService.findOne(+id);
@@ -23,7 +26,6 @@ export class LeagueController {
   create(@Body() createLeagueDto: CreateLeagueDto) {
     return this.leagueService.create(createLeagueDto);
   }
-
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.leagueService.remove(+id);

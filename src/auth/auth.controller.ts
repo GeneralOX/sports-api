@@ -20,6 +20,16 @@ export class AuthController {
     SigninPlayer(@Body() dto: SingInDto) {
         return this.authService.PlayerSignIn(dto)
     }
+
+    @Post("admin")
+    SigninAdmin(@Body() dto: SingInDto) {
+        return this.authService.SigninAdmin(dto)
+    }
+    @Post("register-admin")
+    SignupAdmin(@Body() dto: SingInDto) {
+        return this.authService.SignupAdmin(dto)
+    }
+
     @Post("link-register")
     createUserFromLink(@Body() dto: CreateUser_FL_Dto) {
         return this.authService.createUserFromLink(dto);

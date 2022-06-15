@@ -86,7 +86,11 @@ model Match {
   score    String
   fieldId  Int
 
-  startAt DateTime
+  //
+  startDate String?
+  startTime String?
+  //
+  startAt   DateTime
 
   team1  Team   @relation(fields: [team1Id], references: [id], name: "A_Match", onDelete: Cascade)
   team2  Team   @relation(fields: [team2Id], references: [id], name: "R_Match", onDelete: Cascade)

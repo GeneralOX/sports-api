@@ -71,6 +71,41 @@ export class AuthService {
         };
     }
 
+    async SigninAdmin(dto: SingInDto) {
+        const user = await this.prisma.admin.findFirst({
+            where: {
+                email: dto.email,
+            }
+        });
+        if (!user) throw new ForbiddenException("Incorrect Email!");
+        const pwMatches = await argon.verify(user.password, dto.password);
+        if (!pwMatches) throw new ForbiddenException("Incorrect Password!");
+        return {
+            access_token: await this.signToken(user.id, user.email)
+        };
+    }
+    async SignupAdmin(dto: SingInDto) {
+        const hash = await argon.hash(dto.password);
+        try {
+            const user = await this.prisma.admin.create({
+                data: {
+                    email: dto.email,
+                    password: hash
+                }
+            });
+            return {
+                access_token: await this.signToken(user.id, user.email)
+            };
+        }
+        catch (error) {
+            if (error instanceof PrismaClientKnownRequestError) {
+                if (error.code == 'P2002')
+                    throw new ForbiddenException("Email allready used!");
+            }
+        }
+    }
+
+    /* ****** */
     async createUserFromLink(dto: CreateUser_FL_Dto) {
         const hash = await argon.hash(dto.password);
         const user = await this.prisma.user.update({

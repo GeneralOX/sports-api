@@ -25,4 +25,9 @@ export class FieldController {
   remove(@Param('id') id: string) {
     return this.fieldService.remove(+id);
   }
+
+  @Get("available/:date")
+  check(@Param('date') date: string) {
+    return this.fieldService.findAvailable(date);
+  }
 }

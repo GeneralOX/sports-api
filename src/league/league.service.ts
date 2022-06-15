@@ -43,14 +43,14 @@ export class LeagueService {
   }
 
   async create(dto: CreateLeagueDto) {
-    await this.prisma.league.create({
+    const league = await this.prisma.league.create({
       data: {
         name: dto.name,
-        startTime: dto.startTime,
-        endTime: dto.endTime,
+        startTime: new Date(dto.startTime),
+        endTime: new Date(dto.endTime),
       }
     });
-    return { message: "New League have been added" };
+    return league;
   }
 
   async remove(id: number) {
@@ -69,5 +69,19 @@ export class LeagueService {
       }
     })
     return matches;
+  }
+
+  async getLeagueData(id: number) {
+    var league: any = await this.prisma.league.findUnique({
+      where: { id: Number(id) },
+      include: { Match: true },
+    });
+    let rank = await this.prisma.ranking.findMany({
+      where: { leagueId: Number(id) },
+      select: { team: true }
+    });
+    let teams = rank.map((c) => c.team);
+    let matches = await this.getLeagueMatches(Number(id));
+    return { league, teams, matches };
   }
 }
